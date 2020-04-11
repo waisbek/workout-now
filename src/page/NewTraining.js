@@ -25,7 +25,8 @@ import {
     CardText,
     CardBody,
     CardFooter,
-    CardHeader
+    CardHeader,
+    Jumbotron
 } from 'reactstrap';
 import Header from '../components/Header'
 
@@ -57,60 +58,14 @@ const NewTraining = () => {
     // 	]
     // }
 
-    const renderTraining = () => {
-        return training.rounds.map((item, index) => {
-            return (
-                <Card key={index}>
-                    <React.Fragment>
-                        <CardHeader id={"toggler" + index}>
-                            <Row>
-                                <Col xs="3">
-                                    <img src="/assets/img/time.svg" width="32" height="32" title="Workout" className='mr-2' />
-                                    {`ROUND ${index + 1}`}
-                                </Col>
-                                <Col xs="4">
-                                    <span>
-                                        <img src="/assets/img/workout.svg" width="32" height="32" title="Workout" className='mr-2' />
-                                        {'Tempo de exercício: ' + item.exerciseTime}
-                                    </span>
-                                </Col>
-                                <Col xs="4">
-                                    <img src="/assets/img/hydratation.svg" width="32" height="32" title="Workout" className='mr-2' />
-                                    {`Tempo de descanso: ${item.restTime}`}
-                                </Col>
-                            </Row>
-                        </CardHeader>
-                        <UncontrolledCollapse toggler={"#toggler" + index}>
-                            <CardBody className="px-md-5">
-                                <CardTitle>EXERCICIOS</CardTitle>
-                                {
-                                    renderExerciseList(item.exerciseList)
-                                }
-                            </CardBody>
-                        </UncontrolledCollapse>
-                        {lastRound && index === training.rounds.length - 1 ?
-                            <CardFooter className='round-footer-finish'>
-                                <img src="/assets/img/trophy.svg" width="32" height="32" title="Workout" className='mr-2' />
-                            BOM TRABALHO!!
-                            </CardFooter>
-                            :
-                            <CardFooter className='round-footer-rest'>
-                                <img src="/assets/img/hydratation.svg" width="32" height="32" title="Workout" className='mr-2' />
-                                {`DESCANSAR - ${training.roundRestTime}segundos`}
-                            </CardFooter>
-                        }
-                    </React.Fragment>
-                </Card>
-            )
-        }
-        )
+    const removeRound = (roundIndex) => {
+        let newTrainingData = training
+        newTrainingData.rounds = newTrainingData.rounds.filter((round, index) => roundIndex !== index)
+        console.log(newTrainingData);
+        setTraining(newTrainingData)
+        setUpdate(!update)
     }
 
-    const renderExerciseList = (exercises) => {
-        return exercises.map((exercise, index) => {
-            return <CardText key={index}>{exercise}</CardText>
-        })
-    }
     const addExercise = (exercise) => {
         let roundData = newRound
         roundData.exerciseList.push(exercise)
@@ -137,7 +92,88 @@ const NewTraining = () => {
         setNewRound({ exerciseList: [] })
         setRepeatRoundsInput(true)
         setUpdate(!update)
-        console.log(training);
+    }
+
+    const renderTraining = () => {
+        if (training.rounds.length === 0) {
+            return (
+                <Jumbotron className='new-training-page'>
+                    <Row className='d-flex justify-content-center align-items-center'>
+                        <img src="/assets/img/sad.svg" width="180" height="180" title="Sad" className='mr-2' alt='Sad' />
+                    </Row>
+                    <Row className='mt-5 d-flex justify-content-center align-items-center'>
+                        <span className='empty-list-message'>Você ainda não adicionou nenhum exercício.</span>
+                    </Row>
+                    <Row className='d-flex justify-content-center align-items-center'>
+                        <span className='empty-list-message'>Clique no botão <Button color="secondary" onClick={toggle}>Adicionar Round</Button>  para começar.</span>
+                    </Row>
+                </Jumbotron>
+            )
+        } else {
+            return training.rounds.map((item, index) => {
+                return (
+                    <Card key={index}>
+                        <React.Fragment>
+                            <CardHeader>
+                                <Row>
+                                    <Col xs="2">
+                                        <img src="/assets/img/time.svg" width="32" height="32" title="time" className='mr-2' alt='Time' />
+                                        <strong>ROUND {index + 1}</strong>
+                                    </Col>
+                                    <Col xs="4">
+                                        <span>
+                                            <img src="/assets/img/workout.svg" width="32" height="32" title="Workout" className='mr-2' alt='Workout' />
+                                            Tempo de exercício: <strong>{`${item.exerciseTime} segundos`}</strong>
+                                        </span>
+                                    </Col>
+                                    <Col xs="5">
+                                        <img src="/assets/img/hydratation.svg" width="32" height="32" title="hydratation" className='mr-2' alt='Hydratation' />
+                                        Tempo de descanso: <strong>{`${item.restTime} segundos`}</strong>
+                                    </Col>
+                                    <Col xs="1">
+                                        <Button close onClick={() => removeRound(index)} />
+                                    </Col>
+                                </Row>
+                                <div>
+                                    <Row className="d-flex justify-content-center align-items-center mt-2">
+                                        <small id={"toggler" + index}>expandir exercícios</small>
+                                    </Row>
+                                    <Row className="d-flex justify-content-center align-items-center">
+                                        <img src="/assets/img/chevron.svg" width="18" height="18" title="chevron" alt='Chevron' id={"toggler" + index} />
+                                    </Row>
+                                </div>
+                            </CardHeader>
+                            <UncontrolledCollapse toggler={"#toggler" + index}>
+                                <CardBody className="px-md-5">
+                                    <CardTitle>EXERCICIOS</CardTitle>
+                                    {
+                                        renderExerciseList(item.exerciseList)
+                                    }
+                                </CardBody>
+                            </UncontrolledCollapse>
+                            {lastRound && index === training.rounds.length - 1 ?
+                                <CardFooter className='round-footer-finish'>
+                                    <img src="/assets/img/trophy.svg" width="32" height="32" title="trophy" className='mr-2' alt='Trophy' />
+                            BOM TRABALHO!!
+                            </CardFooter>
+                                :
+                                <CardFooter className='round-footer-rest'>
+                                    <img src="/assets/img/hydratation.svg" width="32" height="32" title="hydratation" className='mr-2' alt='Hydratation' />
+                                    {`DESCANSAR - ${training.roundRestTime}segundos`}
+                                </CardFooter>
+                            }
+                        </React.Fragment>
+                    </Card>
+                )
+            }
+            )
+        }
+    }
+
+    const renderExerciseList = (exercises) => {
+        return exercises.map((exercise, index) => {
+            return <CardText key={index}>{exercise}</CardText>
+        })
     }
 
     return (

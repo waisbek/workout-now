@@ -3,9 +3,17 @@
   height: 100vh;
 }
 
+.new-training-page {
+  height: 70vh;
+}
+
 .exercise-list {
   height: 10rem;
   overflow: scroll;
+}
+
+.empty-list-message {
+  font-size: 2rem;
 }
 
 .card-header {
