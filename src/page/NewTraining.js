@@ -113,6 +113,7 @@ const NewTraining = () => {
     }
 
     const removeExercise = (exercise) => {
+        // TODO Remover apenas um item e não todos com o mesmo ID
         let roundData = newRound
         roundData.exerciseList = roundData.exerciseList.filter(currentExercise => exercise !== currentExercise)
         setNewRound(roundData)
