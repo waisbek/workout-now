@@ -12,7 +12,7 @@ const Header = () => {
 
     return (
             <Navbar color="light" light expand="md">
-                <NavbarBrand href="/">GYM COUNTER</NavbarBrand>
+                <NavbarBrand href="/">WORKOUT TIMER</NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                 </Collapse>

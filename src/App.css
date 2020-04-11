@@ -1,0 +1,25 @@
+.home-page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.exercise-list {
+  height: 10rem;
+  overflow: scroll
+}
+
+.card-header {
+  background-color: #98d6ea !important;
+}
+
+.card-body {
+  background-color: #b9ebcc !important;
+}
+
+.card-footer.round-footer-rest {
+  background-color: #ffeb99 !important;
+}
+
+.card-footer.round-footer-finish {
+  background-color: #ed6663 !important;
+}
