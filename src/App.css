@@ -5,7 +5,7 @@
 
 .exercise-list {
   height: 10rem;
-  overflow: scroll
+  overflow: scroll;
 }
 
 .card-header {
@@ -18,8 +18,14 @@
 
 .card-footer.round-footer-rest {
   background-color: #ffeb99 !important;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 .card-footer.round-footer-finish {
   background-color: #ed6663 !important;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.5rem;
 }

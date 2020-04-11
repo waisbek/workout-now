@@ -89,9 +89,15 @@ const NewTraining = () => {
                             </CardBody>
                         </UncontrolledCollapse>
                         {lastRound && index === training.rounds.length - 1 ?
-                            <CardFooter className='round-footer-finish'>TERMINOU!!</CardFooter>
+                            <CardFooter className='round-footer-finish'>
+                                <img src="/assets/img/trophy.svg" width="32" height="32" title="Workout" className='mr-2' />
+                            BOM TRABALHO!!
+                            </CardFooter>
                             :
-                            <CardFooter className='round-footer-rest'>{`DESCANSO --- ${training.roundRestTime}segundos`}</CardFooter>
+                            <CardFooter className='round-footer-rest'>
+                                <img src="/assets/img/hydratation.svg" width="32" height="32" title="Workout" className='mr-2' />
+                                {`DESCANSAR - ${training.roundRestTime}segundos`}
+                            </CardFooter>
                         }
                     </React.Fragment>
                 </Card>
@@ -112,10 +118,9 @@ const NewTraining = () => {
         setUpdate(!update)
     }
 
-    const removeExercise = (exercise) => {
-        // TODO Remover apenas um item e não todos com o mesmo ID
+    const removeExercise = (exerciseIndex) => {
         let roundData = newRound
-        roundData.exerciseList = roundData.exerciseList.filter(currentExercise => exercise !== currentExercise)
+        roundData.exerciseList = roundData.exerciseList.filter((currentExercise, index) => index !== exerciseIndex)
         setNewRound(roundData)
         setUpdate(!update)
     }
@@ -140,27 +145,29 @@ const NewTraining = () => {
             <Header />
             <Container className="mt-3">
                 <Row>
-                    <Form inline>
-                        <FormGroup>
-                            <Label for="roundRestTime">Tempo de descanso entre rounds: </Label>
-                            <Input type="select" name="select" id="roundRestTime" className="ml-2" bsSize="sm" onChange={(event) => { setTraining({ ...training, [event.target.id]: event.target.value }) }}>
-                                <option value={0}>Selecione...</option>
-                                <option value={10}>10 segundos</option>
-                                <option value={20}>20 segundos</option>
-                                <option value={30}>30 segundos</option>
-                                <option value={40}>40 segundos</option>
-                                <option value={50}>50 segundos</option>
-                                <option value={60}>1 minuto</option>
-                            </Input>
-                        </FormGroup>
-                        <Button className="ml-5" color="secondary" size="sm" onClick={toggle}>Adicionar Round</Button>
-                    </Form>
+                    <Col>
+                        <Button color="secondary" size="sm" onClick={toggle}>Adicionar Round</Button>
+                    </Col>
+                    <Col xs="auto">
+                        <Form inline>
+                            <FormGroup>
+                                <Label for="roundRestTime">Tempo de descanso entre rounds: </Label>
+                                <Input type="select" name="select" id="roundRestTime" className="ml-2" bsSize="sm" onChange={(event) => { setTraining({ ...training, [event.target.id]: event.target.value }) }}>
+                                    <option value={0}>Selecione...</option>
+                                    <option value={10}>10 segundos</option>
+                                    <option value={20}>20 segundos</option>
+                                    <option value={30}>30 segundos</option>
+                                    <option value={40}>40 segundos</option>
+                                    <option value={50}>50 segundos</option>
+                                    <option value={60}>1 minuto</option>
+                                </Input>
+                            </FormGroup>
+                        </Form>
+                    </Col>
                 </Row>
                 <Row className="mt-3">
                     <Col xs="12">
-
                         {renderTraining()}
-
                     </Col>
                 </Row>
             </Container>
@@ -217,7 +224,7 @@ const NewTraining = () => {
                                             <ListGroup>
                                                 {
                                                     newRound.exerciseList.map((exercise, index) => {
-                                                        return <ListGroupItem key={index} color="secondary" action onClick={() => removeExercise(exercise)}>{exercise}</ListGroupItem>
+                                                        return <ListGroupItem key={index} color="secondary" action onClick={() => removeExercise(index)}>{exercise}</ListGroupItem>
                                                     })
                                                 }
                                             </ListGroup>
