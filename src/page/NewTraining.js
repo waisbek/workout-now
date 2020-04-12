@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import {
     Container,
@@ -28,7 +28,8 @@ import {
     CardHeader,
     Jumbotron,
     FormFeedback,
-    Badge
+    Badge,
+    Fade
 } from 'reactstrap';
 import Header from '../components/Header'
 
@@ -43,6 +44,15 @@ const NewTraining = () => {
     const [validationInvalidInputExerciseTime, setValidationInvalidInputExerciseTime] = useState(false)
     const [validationInvalidInputRestTime, setValidationInvalidInputRestTime] = useState(false)
     const [validationInvalidExerciseList, setValidationInvalidExerciseList] = useState(false)
+
+    useEffect(() => {
+        setValidationInvalidInputExerciseTime(false)
+        setValidationInvalidInputRestTime(false)
+        setValidationInvalidExerciseList(false)
+        setNewRound({ exerciseList: [] })
+        setRepeatRoundsInput(true)
+        setRepeatRounds(1)
+    }, [modal])
 
     const toggleNewRoundModal = () => {
         setValidationInvalidInputExerciseTime(false)
@@ -99,10 +109,9 @@ const NewTraining = () => {
                 i++
             }
             toggleNewRoundModal()
-            setNewRound({ exerciseList: [] })
-            setRepeatRoundsInput(true)
         }
         setUpdate(!update)
+        console.log(training);
     }
 
     const checkMandatoryFields = () => {
@@ -210,10 +219,15 @@ const NewTraining = () => {
                             </CardHeader>
                             <UncontrolledCollapse toggler={"#toggler" + index}>
                                 <CardBody className="px-md-5">
-                                    <CardTitle>EXERCICIOS</CardTitle>
-                                    {
-                                        renderExerciseList(item.exerciseList)
-                                    }
+                                    <CardTitle className="d-flex justify-content-center align-items-center">
+                                        <img src="/assets/img/gym.svg" width="32" height="32" title="gym" alt='Gym' className='mr-1' />
+                                        <strong>EXERCÍCIOS</strong>
+                                    </CardTitle>
+                                    <CardText>
+                                        {
+                                            renderExerciseList(item.exerciseList)
+                                        }
+                                    </CardText>
                                 </CardBody>
                             </UncontrolledCollapse>
                             {lastRound && index === training.rounds.length - 1 ?
@@ -224,7 +238,7 @@ const NewTraining = () => {
                                 :
                                 <CardFooter className='round-footer-rest'>
                                     <img src="/assets/img/hydratation.svg" width="32" height="32" title="hydratation" className='mr-2' alt='Hydratation' />
-                                    {`DESCANSAR - ${training.roundRestTime}segundos`}
+                                    {training.roundRestTime === "60" ? 'DESCANSAR 1 minuto' : `DESCANSAR ${training.roundRestTime} segundos`}
                                 </CardFooter>
                             }
                         </React.Fragment>
@@ -237,7 +251,13 @@ const NewTraining = () => {
 
     const renderExerciseList = (exercises) => {
         return exercises.map((exercise, index) => {
-            return <CardText key={index}>{exercise}</CardText>
+            return (
+                <div key={index}>
+                    <Row className="d-flex justify-content-center align-items-center">
+                        <Label className='exercise-label-text'>{exercise}</Label>
+                    </Row>
+                </div>
+            )
         })
     }
 
@@ -327,12 +347,9 @@ const NewTraining = () => {
                                 <Row className="d-flex justify-content-center align-items-center">
                                     <Label>Lista de Exercícios <Badge color="secondary">{newRound.exerciseList.length}</Badge></Label>
                                 </Row>
-                                {
-                                    validationInvalidExerciseList &&
-                                    <Row className="d-flex justify-content-center align-items-center">
-                                        <small className='invalid-exercise-list'>Sua lista de exercícios está vazia, adicione um exercício.</small>
-                                    </Row>
-                                }
+                                <Row className="d-flex justify-content-center align-items-center">
+                                    <Fade in={validationInvalidExerciseList} tag="small" className='invalid-exercise-list'>Sua lista de exercícios está vazia, adicione um exercício.</Fade>
+                                </Row>
                                 <Row>
                                     <Col>
                                         <small>Clique para adicionar </small>

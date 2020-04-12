@@ -12,12 +12,20 @@
   overflow: scroll;
 }
 
+.exercise-label-text {
+  /* color: #b9ebcc; */
+  font-weight: 500;
+  background-color: white;
+  padding: 10px 30px 10px 30px;
+  border-radius: 100px;
+}
+
 .empty-list-message {
   font-size: 2rem;
 }
 
 .invalid-exercise-list{
-  color: #ed6663;
+  color: #dc3545;
 }
 
 .card-header {
