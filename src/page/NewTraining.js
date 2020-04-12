@@ -26,7 +26,9 @@ import {
     CardBody,
     CardFooter,
     CardHeader,
-    Jumbotron
+    Jumbotron,
+    FormFeedback,
+    Badge
 } from 'reactstrap';
 import Header from '../components/Header'
 
@@ -38,8 +40,14 @@ const NewTraining = () => {
     const [lastRound, setLastRound] = useState(false)
     const [repeatRoundsInput, setRepeatRoundsInput] = useState(true)
     const [repeatRounds, setRepeatRounds] = useState(1)
+    const [validationInvalidInputExerciseTime, setValidationInvalidInputExerciseTime] = useState(false)
+    const [validationInvalidInputRestTime, setValidationInvalidInputRestTime] = useState(false)
+    const [validationInvalidExerciseList, setValidationInvalidExerciseList] = useState(false)
 
-    const toggle = () => setModal(!modal);
+    const toggleNewRoundModal = () => {
+        setValidationInvalidInputExerciseTime(false)
+        setModal(!modal)
+    };
     const exerciseList = ['Exercício 01', 'Exercício 02', 'Exercício 03', 'Exercício 04', 'Exercício 05', 'Exercício 06', 'Exercício 07', 'Exercício 08', 'Exercício 09', 'Exercício 10']
 
     // const training = {
@@ -61,7 +69,6 @@ const NewTraining = () => {
     const removeRound = (roundIndex) => {
         let newTrainingData = training
         newTrainingData.rounds = newTrainingData.rounds.filter((round, index) => roundIndex !== index)
-        console.log(newTrainingData);
         setTraining(newTrainingData)
         setUpdate(!update)
     }
@@ -70,6 +77,7 @@ const NewTraining = () => {
         let roundData = newRound
         roundData.exerciseList.push(exercise)
         setNewRound(roundData)
+        checkInvalidField('exerciseList', roundData.exerciseList.length)
         setUpdate(!update)
     }
 
@@ -77,20 +85,77 @@ const NewTraining = () => {
         let roundData = newRound
         roundData.exerciseList = roundData.exerciseList.filter((currentExercise, index) => index !== exerciseIndex)
         setNewRound(roundData)
+        checkInvalidField('exerciseList', roundData.exerciseList.length)
         setUpdate(!update)
     }
 
     const saveNewRound = () => {
-        let i = 0
-        while (repeatRounds > i) {
-            let newTrainigData = training
-            newTrainigData.rounds.push(newRound)
-            setTraining(newTrainigData)
-            i++
+        if (checkMandatoryFields()) {
+            let i = 0
+            while (repeatRounds > i) {
+                let newTrainigData = training
+                newTrainigData.rounds.push(newRound)
+                setTraining(newTrainigData)
+                i++
+            }
+            toggleNewRoundModal()
+            setNewRound({ exerciseList: [] })
+            setRepeatRoundsInput(true)
         }
-        toggle()
-        setNewRound({ exerciseList: [] })
-        setRepeatRoundsInput(true)
+        setUpdate(!update)
+    }
+
+    const checkMandatoryFields = () => {
+        if (newRound.exerciseTime === undefined || parseInt(newRound.exerciseTime) === 0) {
+            setValidationInvalidInputExerciseTime(true)
+            return false
+        } else {
+            setValidationInvalidInputExerciseTime(false)
+        }
+
+        if (newRound.restTime === undefined || parseInt(newRound.restTime) === 0) {
+            setValidationInvalidInputRestTime(true)
+            return false
+        } else {
+            setValidationInvalidInputRestTime(false)
+        }
+
+        if (newRound.exerciseList.length === 0) {
+            setValidationInvalidExerciseList(true)
+            return false
+        } else {
+            setValidationInvalidExerciseList(false)
+        }
+        return true
+    }
+
+    const checkInvalidField = (field, value) => {
+        switch (field) {
+            case 'exerciseTime':
+                if (parseInt(value) === 0) {
+                    setValidationInvalidInputExerciseTime(true)
+                } else {
+                    setValidationInvalidInputExerciseTime(false)
+                }
+                break;
+            case 'restTime':
+                if (parseInt(value) === 0) {
+                    setValidationInvalidInputRestTime(true)
+                } else {
+                    setValidationInvalidInputRestTime(false)
+                }
+                break;
+            case 'exerciseList':
+                if (value === 0) {
+                    setValidationInvalidExerciseList(true)
+                } else {
+                    setValidationInvalidExerciseList(false)
+                }
+                break;
+            default:
+                break;
+        }
+
         setUpdate(!update)
     }
 
@@ -105,7 +170,7 @@ const NewTraining = () => {
                         <span className='empty-list-message'>Você ainda não adicionou nenhum exercício.</span>
                     </Row>
                     <Row className='d-flex justify-content-center align-items-center'>
-                        <span className='empty-list-message'>Clique no botão <Button color="secondary" onClick={toggle}>Adicionar Round</Button>  para começar.</span>
+                        <span className='empty-list-message'>Clique no botão <Button color="secondary" onClick={toggleNewRoundModal}>Adicionar Round</Button>  para começar.</span>
                     </Row>
                 </Jumbotron>
             )
@@ -154,7 +219,7 @@ const NewTraining = () => {
                             {lastRound && index === training.rounds.length - 1 ?
                                 <CardFooter className='round-footer-finish'>
                                     <img src="/assets/img/trophy.svg" width="32" height="32" title="trophy" className='mr-2' alt='Trophy' />
-                            BOM TRABALHO!!
+                            FIM DO TREINAMENTO!
                             </CardFooter>
                                 :
                                 <CardFooter className='round-footer-rest'>
@@ -182,7 +247,7 @@ const NewTraining = () => {
             <Container className="mt-3">
                 <Row>
                     <Col>
-                        <Button color="secondary" size="sm" onClick={toggle}>Adicionar Round</Button>
+                        <Button color="secondary" size="sm" onClick={toggleNewRoundModal}>Adicionar Round</Button>
                     </Col>
                     <Col xs="auto">
                         <Form inline>
@@ -211,14 +276,19 @@ const NewTraining = () => {
                 //  MODAL - NOVO ROUD
             }
             <div>
-                <Modal isOpen={modal} toggle={toggle}>
-                    <ModalHeader toggle={toggle}>Novo round</ModalHeader>
+                <Modal isOpen={modal} toggle={toggleNewRoundModal}>
+                    <ModalHeader toggle={toggleNewRoundModal}>Novo round</ModalHeader>
                     <ModalBody>
                         <Col>
                             <Form>
                                 <FormGroup>
                                     <Label for="exerciseTime">Tempo de cada exercício</Label>
-                                    <Input type="select" name="select" id="exerciseTime" onChange={(event) => { setNewRound({ ...newRound, [event.target.id]: event.target.value }) }}>
+                                    <Input type="select" name="select" id="exerciseTime"
+                                        invalid={validationInvalidInputExerciseTime}
+                                        onChange={(event) => {
+                                            checkInvalidField(event.target.id, event.target.value)
+                                            setNewRound({ ...newRound, [event.target.id]: event.target.value })
+                                        }}>
                                         <option value={0}>Selecione...</option>
                                         <option value={10}>10 segundos</option>
                                         <option value={20}>20 segundos</option>
@@ -226,10 +296,16 @@ const NewTraining = () => {
                                         <option value={40}>40 segundos</option>
                                         <option value={50}>50 segundos</option>
                                     </Input>
+                                    <FormFeedback>Selecione o tempo de cada exercício.</FormFeedback>
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="exerciseTime">Tempo de descanso do exercício</Label>
-                                    <Input type="select" name="select" id="restTime" onChange={(event) => { setNewRound({ ...newRound, [event.target.id]: event.target.value }) }}>
+                                    <Label for="restTime">Tempo de descanso do exercício</Label>
+                                    <Input type="select" name="select" id="restTime"
+                                        invalid={validationInvalidInputRestTime}
+                                        onChange={(event) => {
+                                            checkInvalidField(event.target.id, event.target.value)
+                                            setNewRound({ ...newRound, [event.target.id]: event.target.value })
+                                        }}>
                                         <option value={0}>Selecione...</option>
                                         <option value={10}>10 segundos</option>
                                         <option value={20}>20 segundos</option>
@@ -237,13 +313,20 @@ const NewTraining = () => {
                                         <option value={40}>40 segundos</option>
                                         <option value={50}>50 segundos</option>
                                     </Input>
+                                    <FormFeedback>Selecione o tempo de descanso entre cada exercício.</FormFeedback>
                                 </FormGroup>
                                 <Row className="d-flex justify-content-center align-items-center">
-                                    <Label>Lista de Exercícios </Label>
+                                    <Label>Lista de Exercícios <Badge color="secondary">{newRound.exerciseList.length}</Badge></Label>
                                 </Row>
+                                {
+                                    validationInvalidExerciseList &&
+                                    <Row className="d-flex justify-content-center align-items-center">
+                                        <small className='invalid-exercise-list'>Sua lista de exercícios está vazia, adicione um exercício.</small>
+                                    </Row>
+                                }
                                 <Row>
                                     <Col>
-                                        <Label>Clique para adicionar </Label>
+                                        <small>Clique para adicionar </small>
                                         <div className='exercise-list'>
                                             <ListGroup>
                                                 {
@@ -255,7 +338,7 @@ const NewTraining = () => {
                                         </div>
                                     </Col>
                                     <Col>
-                                        <Label>Clique para remover </Label>
+                                        <small>Clique para remover </small>
                                         <div className='exercise-list'>
                                             <ListGroup>
                                                 {

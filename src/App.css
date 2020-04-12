@@ -16,6 +16,10 @@
   font-size: 2rem;
 }
 
+.invalid-exercise-list{
+  color: #ed6663;
+}
+
 .card-header {
   background-color: #98d6ea !important;
 }
