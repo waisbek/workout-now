@@ -1,21 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
-    Collapse,
     Navbar,
-    NavbarToggler,
-    NavbarBrand,
+    NavbarBrand
 } from 'reactstrap';
 
 const Header = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => setIsOpen(!isOpen);
 
     return (
         <Navbar color="light" light expand="md">
             <NavbarBrand href="/">WORKOUT TIMER</NavbarBrand>
-            <NavbarToggler onClick={toggle} />
-            <Collapse isOpen={isOpen} navbar>
-            </Collapse>
         </Navbar>
     )
 }
