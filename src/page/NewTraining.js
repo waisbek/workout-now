@@ -277,12 +277,18 @@ const NewTraining = () => {
             }
             <div>
                 <Modal isOpen={modal} toggle={toggleNewRoundModal}>
-                    <ModalHeader toggle={toggleNewRoundModal}>Novo round</ModalHeader>
+                    <ModalHeader toggle={toggleNewRoundModal}>
+                        <img src="/assets/img/time.svg" width="32" height="32" title="time" className='mr-2' alt='Time' />
+                    Novo round
+                    </ModalHeader>
                     <ModalBody>
                         <Col>
                             <Form>
                                 <FormGroup>
-                                    <Label for="exerciseTime">Tempo de cada exercício</Label>
+                                    <Label for="exerciseTime">
+                                        <img src="/assets/img/workout.svg" width="32" height="32" title="Workout" className='mr-2' alt='Workout' />
+                                    Tempo de cada exercício
+                                    </Label>
                                     <Input type="select" name="select" id="exerciseTime"
                                         invalid={validationInvalidInputExerciseTime}
                                         onChange={(event) => {
@@ -299,7 +305,10 @@ const NewTraining = () => {
                                     <FormFeedback>Selecione o tempo de cada exercício.</FormFeedback>
                                 </FormGroup>
                                 <FormGroup>
-                                    <Label for="restTime">Tempo de descanso do exercício</Label>
+                                    <Label for="restTime">
+                                        <img src="/assets/img/hydratation.svg" width="32" height="32" title="hydratation" className='mr-2' alt='Hydratation' />
+                                    Tempo de descanso do exercício
+                                    </Label>
                                     <Input type="select" name="select" id="restTime"
                                         invalid={validationInvalidInputRestTime}
                                         onChange={(event) => {
@@ -331,7 +340,7 @@ const NewTraining = () => {
                                             <ListGroup>
                                                 {
                                                     exerciseList.map((exercise, index) => {
-                                                        return <ListGroupItem key={index} color="secondary" action onClick={() => addExercise(exercise)}>{exercise}</ListGroupItem>
+                                                        return <ListGroupItem key={index} action onClick={() => addExercise(exercise)}>{exercise}</ListGroupItem>
                                                     })
                                                 }
                                             </ListGroup>
@@ -343,7 +352,7 @@ const NewTraining = () => {
                                             <ListGroup>
                                                 {
                                                     newRound.exerciseList.map((exercise, index) => {
-                                                        return <ListGroupItem key={index} color="secondary" action onClick={() => removeExercise(index)}>{exercise}</ListGroupItem>
+                                                        return <ListGroupItem key={index} color="success" action onClick={() => removeExercise(index)}>{exercise}</ListGroupItem>
                                                     })
                                                 }
                                             </ListGroup>
