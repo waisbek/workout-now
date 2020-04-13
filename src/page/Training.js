@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button, Col, Row, Jumbotron } from 'reactstrap'
 import UIfx from 'uifx'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import Header from '../components/Header'
 
 const Training = ({ location }) => {
@@ -14,6 +16,7 @@ const Training = ({ location }) => {
     const [currentRound, setCurrentRound] = useState(0)
     const [totalExerciseCurrentRound, setTotalExerciseCurrentRound] = useState()
     const [currentExercise, setCurrentExercise] = useState(0)
+    const [currentTime, setCurrentTime] = useState(0)
     const [isStartButton, setIsStartButton] = useState(true)
     const [isPauseButton, setIsPauseButton] = useState(false)
     const [isRestartButton, setIsRestartButton] = useState(false)
@@ -60,7 +63,7 @@ const Training = ({ location }) => {
 
         switch (currentActivity) {
             case 'exercise':
-                if (secondControl === parseInt(trainingData.rounds[currentRound].exerciseTime)) {
+                if (secondControl > currentTime) {
                     stopTimer()
                     if (currentExercise === totalExerciseCurrentRound) {
                         if (totalRounds - 1 === currentRound) {
@@ -72,7 +75,7 @@ const Training = ({ location }) => {
                     } else {
                         startTimer('restTime')
                     }
-                } else if (parseInt(trainingData.rounds[currentRound].exerciseTime) - secondControl === 4) {
+                } else if (parseInt(trainingData.rounds[currentRound].exerciseTime) - secondControl === 3) {
                     const beepTimer = setInterval(() => {
                         sounds.beep.play()
                     }, 1000)
@@ -80,11 +83,11 @@ const Training = ({ location }) => {
                 }
                 break;
             case 'restTime':
-                if (secondControl === parseInt(trainingData.rounds[currentRound].restTime)) {
+                if (secondControl > currentTime) {
                     stopTimer()
                     setCurrentExercise(currentExercise => currentExercise + 1)
                     startTimer('exercise')
-                } else if (parseInt(trainingData.rounds[currentRound].restTime) - secondControl === 4) {
+                } else if (parseInt(trainingData.rounds[currentRound].restTime) - secondControl === 3) {
                     const beepTimer = setInterval(() => {
                         sounds.beep.play()
                     }, 1000)
@@ -92,12 +95,12 @@ const Training = ({ location }) => {
                 }
                 break;
             case 'restRoundTime':
-                if (secondControl === parseInt(trainingData.rounds[currentRound].roundRestTime)) {
+                if (secondControl > parseInt(trainingData.rounds[currentRound].roundRestTime)) {
                     stopTimer()
                     setCurrentRound(currentRound => currentRound + 1)
                     setCurrentExercise(0)
                     startTimer('exercise')
-                } else if (parseInt(trainingData.rounds[currentRound].roundRestTime) - secondControl === 4) {
+                } else if (currentTime - secondControl === 3) {
                     const beepTimer = setInterval(() => {
                         sounds.beep.play()
                     }, 1000)
@@ -116,11 +119,25 @@ const Training = ({ location }) => {
         setIsStartButton(false)
         setIsPauseButton(true)
         setCurrentActivity(activity)
-        if (activity === 'exercise') {
-            sounds.whistle.play()
-        } else {
-            // Som para descanso
+
+        switch (activity) {
+            case 'exercise':
+                setCurrentTime(parseInt(trainingData.rounds[currentRound].exerciseTime))
+                sounds.whistle.play()
+                break;
+
+            case 'restTime':
+                setCurrentTime(parseInt(trainingData.rounds[currentRound].restTime))
+                break;
+
+            case 'restRoundTime':
+                setCurrentTime(parseInt(trainingData.rounds[currentRound].roundRestTime))
+                break;
+
+            default:
+                break;
         }
+
         const timer = setInterval(() => {
             setSecondControl(secondControl => secondControl + 1)
             setSeconds(seconds => seconds + 1)
@@ -150,6 +167,7 @@ const Training = ({ location }) => {
         setCurrentExercise(0)
         setIsStartButton(true)
         setIsRestartButton(false)
+        setCurrentTime(0)
     }
 
     return (
@@ -183,7 +201,7 @@ const Training = ({ location }) => {
                                     {
                                         currentActivity === 'exercise' ?
                                             <h3>
-                                                <img src="/assets/img/workout.svg" width="32" height="32" title="Workout" className='mr-2' alt='Workout' />
+                                                <img src="/assets/img/gym.svg" width="32" height="32" title="Gym" className='mr-2' alt='Gym' />
                                                 {trainingData.rounds[currentRound].exerciseList[currentExercise]}
                                             </h3> :
                                             <h3>
@@ -194,8 +212,17 @@ const Training = ({ location }) => {
                                 </Col>
                             </Row>
                             <Row className="d-flex justify-content-center aligns-items-center mt-4">
-                                <h1>{`0${minutes}`}:</h1>
-                                <h1>{seconds > 9 ? seconds : `0${seconds}`}</h1>
+                                <div>
+                                    <CircularProgressbar
+                                        value={(seconds * 100) / currentTime}
+                                        text={seconds > 9 ? `0${minutes}:${seconds}` : `0${minutes}:0${seconds}`}
+                                        styles={
+                                            buildStyles(
+                                                currentActivity === 'exercise' ? { textColor: "#28a745", pathColor: "#28a745" } : { textColor: "#ffc107", pathColor: "#ffc107" }
+                                            )
+                                        }
+                                    />
+                                </div>
                             </Row>
                             <Row className="d-flex justify-content-center aligns-items-center mt-2">
                                 {
