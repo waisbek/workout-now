@@ -74,12 +74,11 @@ const NewTraining = () => {
     const exerciseList = ['Exercício 01', 'Exercício 02', 'Exercício 03', 'Exercício 04', 'Exercício 05', 'Exercício 06', 'Exercício 07', 'Exercício 08', 'Exercício 09', 'Exercício 10']
 
     // const training = {
-    // 	roundRestTime: 0,
     // 	rounds: [
     // 		{
-    //  		type: round,
     // 			exerciseTime: 0,
     // 			restTime: 0,
+    // 	        roundRestTime: 0,
     // 			exerciseList: [
     // 				'exercicio01',
     // 				'exercicio02',
