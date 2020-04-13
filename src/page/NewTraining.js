@@ -329,8 +329,10 @@ const NewTraining = () => {
                                     </Row>
                                     <Row>
                                         <Col>
-                                            <small>Entre exercícios</small>
-                                            <Input type="select" name="select" id="restTime"
+                                            <div className='d-flex justify-content-center'>
+                                                <small>Entre exercícios</small>
+                                            </div>
+                                            <Input type="select" name="select" id="restTime" bsSize="sm"
                                                 invalid={validationInvalidInputRestTime}
                                                 onChange={(event) => {
                                                     checkInvalidField(event.target.id, event.target.value)
@@ -346,8 +348,10 @@ const NewTraining = () => {
                                             <FormFeedback>Campo obrigatório</FormFeedback>
                                         </Col>
                                         <Col>
-                                            <small>Entre rounds</small>
-                                            <Input type="select" name="select" id="roundRestTime"
+                                            <div className='d-flex justify-content-center'>
+                                                <small>Entre rounds</small>
+                                            </div>
+                                            <Input type="select" name="select" id="roundRestTime" bsSize="sm"
                                                 invalid={validationInvalidInputRoundRestTime}
                                                 onChange={(event) => {
                                                     checkInvalidField(event.target.id, event.target.value)
@@ -372,7 +376,7 @@ const NewTraining = () => {
                                 Tempo de cada exercício
                                 </Label>
                                     </Row>
-                                    <Input type="select" name="select" id="exerciseTime"
+                                    <Input type="select" name="select" id="exerciseTime" bsSize="sm"
                                         invalid={validationInvalidInputExerciseTime}
                                         onChange={(event) => {
                                             checkInvalidField(event.target.id, event.target.value)
@@ -395,7 +399,9 @@ const NewTraining = () => {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <small>Clique para adicionar </small>
+                                        <div className='d-flex justify-content-center'>
+                                            <small>Clique para adicionar </small>
+                                        </div>
                                         <div className='exercise-list'>
                                             <ListGroup>
                                                 {
@@ -407,7 +413,9 @@ const NewTraining = () => {
                                         </div>
                                     </Col>
                                     <Col>
-                                        <small>Clique para remover </small>
+                                        <div className='d-flex justify-content-center'>
+                                            <small>Clique para remover </small>
+                                        </div>
                                         <div className='exercise-list'>
                                             <ListGroup>
                                                 {
@@ -420,20 +428,32 @@ const NewTraining = () => {
                                     </Col>
                                 </Row>
                                 <FormGroup>
-                                    <Label for="repeatRounds">Repetir esse round?</Label>
-                                    <InputGroup>
-                                        <InputGroupAddon addonType="prepend">
-                                            <InputGroupText>
-                                                <Input addon type="checkbox" onChange={(event) => { setRepeatRoundsInput(!event.target.checked) }} />
-                                            </InputGroupText>
-                                        </InputGroupAddon>
-                                        <Input disabled={repeatRoundsInput} id="repeatRounds" placeholder="Quantas vezes?" onChange={(event) => { setRepeatRounds(event.target.value) }} />
-                                    </InputGroup>
-                                </FormGroup>
-                                <FormGroup>
-                                    <div>
-                                        <CustomInput type="switch" id="lastRound" name="lastRound" label="Último round?" onClick={(event) => { setLastRound(event.target.checked) }} />
-                                    </div>
+                                    <Row>
+                                        <Col>
+                                            <div className='d-flex justify-content-center'>
+                                                <Label for="repeatRounds">Repetir esse round?</Label>
+                                            </div>
+                                            <InputGroup>
+                                                <InputGroupAddon addonType="prepend">
+                                                    <InputGroupText>
+                                                        <Input addon type="checkbox" onChange={(event) => { setRepeatRoundsInput(!event.target.checked) }} />
+                                                    </InputGroupText>
+                                                </InputGroupAddon>
+                                                <Input type="select" name="select" disabled={repeatRoundsInput} id="repeatRounds" bsSize="sm"
+                                                    onChange={(event) => { setRepeatRounds(event.target.value) }}>
+                                                    <option value={0}>Selecione...</option>
+                                                    <option value={10}>10 segundos</option>
+                                                    <option value={20}>20 segundos</option>
+                                                    <option value={30}>30 segundos</option>
+                                                    <option value={40}>40 segundos</option>
+                                                    <option value={50}>50 segundos</option>
+                                                </Input>
+                                            </InputGroup>
+                                        </Col>
+                                        <Col className='d-flex justify-content-center align-items-center'>
+                                            <CustomInput type="switch" id="lastRound" name="lastRound" label="Último round?" onClick={(event) => { setLastRound(event.target.checked) }} />
+                                        </Col>
+                                    </Row>
                                 </FormGroup>
                             </Form>
                         </Col>
