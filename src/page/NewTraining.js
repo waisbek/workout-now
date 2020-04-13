@@ -120,7 +120,7 @@ const NewTraining = () => {
     const saveNewRound = () => {
         if (checkMandatoryFields()) {
             let i = 0
-            while (repeatRounds > i) {
+            while (parseInt(repeatRounds) > i) {
                 let newTrainigData = training
                 newTrainigData.rounds.push(newRound)
                 setTraining(newTrainigData)
@@ -442,11 +442,11 @@ const NewTraining = () => {
                                                 <Input type="select" name="select" disabled={repeatRoundsInput} id="repeatRounds" bsSize="sm"
                                                     onChange={(event) => { setRepeatRounds(event.target.value) }}>
                                                     <option value={0}>Selecione...</option>
-                                                    <option value={10}>10 segundos</option>
-                                                    <option value={20}>20 segundos</option>
-                                                    <option value={30}>30 segundos</option>
-                                                    <option value={40}>40 segundos</option>
-                                                    <option value={50}>50 segundos</option>
+                                                    <option value={1}>1</option>
+                                                    <option value={2}>2</option>
+                                                    <option value={3}>3</option>
+                                                    <option value={4}>4</option>
+                                                    <option value={5}>5</option>
                                                 </Input>
                                             </InputGroup>
                                         </Col>
