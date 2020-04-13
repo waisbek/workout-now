@@ -8,7 +8,7 @@ const Header = () => {
 
     return (
         <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">WORKOUT TIMER</NavbarBrand>
+            <NavbarBrand href="/">WORKOUT NOW</NavbarBrand>
         </Navbar>
     )
 }

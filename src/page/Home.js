@@ -20,7 +20,7 @@ const Home = () => {
             <Row>
                 <Col xs="12">
                     <div>
-                        <Label tag='h1'>WORKOUT TIMER</Label>
+                        <Label tag='h1'>WORKOUT NOW</Label>
                     </div>
                     <Jumbotron>
                         {goPreparation && <Redirect to='/new-training' />}
