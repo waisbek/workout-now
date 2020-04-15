@@ -10,7 +10,7 @@ A web application that allow to create a exercise plan, after that you can start
 ###### - Next features
 - [ ] Change the exercises generic names to real names.
 - [ ] Modify the layout to apply responsivity.
-- [ ] Fix the sounds when the application run in a smartphone.
+- [X] Fix the sounds when the application run in a smartphone.
 
 <br/>
 
@@ -18,5 +18,4 @@ A web application that allow to create a exercise plan, after that you can start
 - React as interface view library.
 - Bootstrap and reactstrap for design/layout of the components
 - react-router-dom as navigation library.
-- uifx library to play sounds.
 - react-circular-progressbar component to improve the UI (countdown timer).
