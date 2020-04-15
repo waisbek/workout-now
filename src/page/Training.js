@@ -125,7 +125,7 @@ const Training = ({ location }) => {
         setSeconds(seconds => seconds + 1)
     }, isRunning ? delay : null);
 
-    const startTimer = (activity) => {
+    const startTimer = async (activity) => {
         setIsRestartButton(false)
         setIsStartButton(false)
         setIsPauseButton(true)
@@ -135,7 +135,7 @@ const Training = ({ location }) => {
             case 'exercise':
                 setCurrentTime(parseInt(trainingData.rounds[currentRound].exerciseTime))
                 audio.src = sounds.whistle
-                audio.play()
+                await audio.play()
                 break;
 
             case 'restTime':
