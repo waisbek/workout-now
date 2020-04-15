@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Container, Button, Col, Row, Jumbotron } from 'reactstrap'
-import UIfx from 'uifx'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Header from '../components/Header'
@@ -10,8 +9,6 @@ const Training = ({ location }) => {
     const [secondControl, setSecondControl] = useState(0)
     const [seconds, setSeconds] = useState(0)
     const [minutes, setMinutes] = useState(0)
-    const [timer, setTimer] = useState()
-    const [beepTimer, setBeepTimer] = useState()
     const [currentActivity, setCurrentActivity] = useState(null)
     const [currentRound, setCurrentRound] = useState(0)
     const [totalExerciseCurrentRound, setTotalExerciseCurrentRound] = useState()
@@ -22,17 +19,16 @@ const Training = ({ location }) => {
     const [isRestartButton, setIsRestartButton] = useState(false)
     const [isFinish, setIsFinish] = useState(false)
     const [goHome, setGoHome] = useState(false)
+    const [isRunning, setIsRunning] = useState(false);
+    const [delay, setDelay] = useState(1000);
+    const [audio, setAudio] = useState(new Audio());
 
     const trainingData = location.state.training
     const totalRounds = trainingData.rounds.length
 
     const sounds = {
-        whistle: new UIfx(
-            '/assets/sound/whistle.wav'
-        ),
-        beep: new UIfx(
-            '/assets/sound/beep.wav'
-        )
+        whistle: '/assets/sound/whistle.wav',
+        beep: '/assets/sound/beep.wav'
     }
 
     // const training = {
@@ -75,11 +71,9 @@ const Training = ({ location }) => {
                     } else {
                         startTimer('restTime')
                     }
-                } else if (parseInt(trainingData.rounds[currentRound].exerciseTime) - secondControl === 3) {
-                    const beepTimer = setInterval(() => {
-                        sounds.beep.play()
-                    }, 1000)
-                    setBeepTimer(beepTimer)
+                } else if (parseInt(trainingData.rounds[currentRound].exerciseTime) - secondControl <= 3) {
+                    audio.src = sounds.beep
+                    audio.play()
                 }
                 break;
             case 'restTime':
@@ -87,11 +81,9 @@ const Training = ({ location }) => {
                     stopTimer()
                     setCurrentExercise(currentExercise => currentExercise + 1)
                     startTimer('exercise')
-                } else if (parseInt(trainingData.rounds[currentRound].restTime) - secondControl === 3) {
-                    const beepTimer = setInterval(() => {
-                        sounds.beep.play()
-                    }, 1000)
-                    setBeepTimer(beepTimer)
+                } else if (parseInt(trainingData.rounds[currentRound].restTime) - secondControl <= 3) {
+                    audio.src = sounds.beep
+                    audio.play()
                 }
                 break;
             case 'restRoundTime':
@@ -100,30 +92,51 @@ const Training = ({ location }) => {
                     setCurrentRound(currentRound => currentRound + 1)
                     setCurrentExercise(0)
                     startTimer('exercise')
-                } else if (currentTime - secondControl === 3) {
-                    const beepTimer = setInterval(() => {
-                        sounds.beep.play()
-                    }, 1000)
-                    setBeepTimer(beepTimer)
+                } else if (currentTime - secondControl <= 3) {
+                    audio.src = sounds.beep
+                    audio.play()
                 }
                 break;
             default:
                 break;
         }
-
-
     }, [seconds])
+
+    const useInterval = (callback, delay) => {
+        const savedCallback = useRef();
+
+        useEffect(() => {
+            savedCallback.current = callback;
+        }, [callback]);
+
+        useEffect(() => {
+            function tick() {
+                savedCallback.current();
+            }
+            if (delay !== null) {
+                let id = setInterval(tick, delay);
+                return () => clearInterval(id);
+            }
+        }, [delay]);
+    }
+
+    useInterval(() => {
+        setSecondControl(secondControl => secondControl + 1)
+        setSeconds(seconds => seconds + 1)
+    }, isRunning ? delay : null);
 
     const startTimer = (activity) => {
         setIsRestartButton(false)
         setIsStartButton(false)
         setIsPauseButton(true)
         setCurrentActivity(activity)
+        setIsRunning(true)
 
         switch (activity) {
             case 'exercise':
                 setCurrentTime(parseInt(trainingData.rounds[currentRound].exerciseTime))
-                sounds.whistle.play()
+                audio.src = sounds.whistle
+                audio.play()
                 break;
 
             case 'restTime':
@@ -137,17 +150,10 @@ const Training = ({ location }) => {
             default:
                 break;
         }
-
-        const timer = setInterval(() => {
-            setSecondControl(secondControl => secondControl + 1)
-            setSeconds(seconds => seconds + 1)
-        }, 1000)
-        setTimer(timer)
     }
 
     const stopTimer = () => {
-        clearInterval(timer)
-        clearInterval(beepTimer)
+        setIsRunning(false)
         setMinutes(0)
         setSeconds(0)
         setSecondControl(0)
@@ -156,8 +162,7 @@ const Training = ({ location }) => {
     const pauseTimer = () => {
         setIsPauseButton(false)
         setIsRestartButton(true)
-        clearInterval(timer)
-        clearInterval(beepTimer)
+        setIsRunning(false)
     }
 
     const restartTraining = () => {
