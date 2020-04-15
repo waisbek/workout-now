@@ -130,7 +130,6 @@ const Training = ({ location }) => {
         setIsStartButton(false)
         setIsPauseButton(true)
         setCurrentActivity(activity)
-        setIsRunning(true)
 
         switch (activity) {
             case 'exercise':
@@ -150,6 +149,8 @@ const Training = ({ location }) => {
             default:
                 break;
         }
+
+        setIsRunning(true)
     }
 
     const stopTimer = () => {
