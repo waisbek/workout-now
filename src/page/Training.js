@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { Container, Button, Col, Row, Jumbotron } from 'reactstrap'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { Howl, Howler } from 'howler';
 import Header from '../components/Header'
 
 const Training = ({ location }) => {
@@ -21,15 +22,21 @@ const Training = ({ location }) => {
     const [goHome, setGoHome] = useState(false)
     const [isRunning, setIsRunning] = useState(false);
     const [delay, setDelay] = useState(1000);
-    const [audio, setAudio] = useState(new Audio());
 
     const trainingData = location.state.training
     const totalRounds = trainingData.rounds.length
 
-    const sounds = {
-        whistle: '/assets/sound/whistle.wav',
-        beep: '/assets/sound/beep.wav'
-    }
+    const whistleAudio = new Howl({
+        src: ['/assets/sound/whistle.wav'],
+        preload: true
+    });
+
+    const beepAudio = new Howl({
+        src: ['/assets/sound/beep.wav'],
+        preload: true
+    });
+
+    Howler.volume(1.0);
 
     // const training = {
     // 	rounds: [
@@ -72,8 +79,7 @@ const Training = ({ location }) => {
                         startTimer('restTime')
                     }
                 } else if (parseInt(trainingData.rounds[currentRound].exerciseTime) - secondControl <= 3) {
-                    audio.src = sounds.beep
-                    audio.play()
+                    beepAudio.play()
                 }
                 break;
             case 'restTime':
@@ -82,8 +88,7 @@ const Training = ({ location }) => {
                     setCurrentExercise(currentExercise => currentExercise + 1)
                     startTimer('exercise')
                 } else if (parseInt(trainingData.rounds[currentRound].restTime) - secondControl <= 3) {
-                    audio.src = sounds.beep
-                    audio.play()
+                    beepAudio.play()
                 }
                 break;
             case 'restRoundTime':
@@ -93,8 +98,7 @@ const Training = ({ location }) => {
                     setCurrentExercise(0)
                     startTimer('exercise')
                 } else if (currentTime - secondControl <= 3) {
-                    audio.src = sounds.beep
-                    audio.play()
+                    beepAudio.play()
                 }
                 break;
             default:
@@ -125,7 +129,7 @@ const Training = ({ location }) => {
         setSeconds(seconds => seconds + 1)
     }, isRunning ? delay : null);
 
-    const startTimer = async (activity) => {
+    const startTimer = (activity) => {
         setIsRestartButton(false)
         setIsStartButton(false)
         setIsPauseButton(true)
@@ -134,8 +138,7 @@ const Training = ({ location }) => {
         switch (activity) {
             case 'exercise':
                 setCurrentTime(parseInt(trainingData.rounds[currentRound].exerciseTime))
-                audio.src = sounds.whistle
-                await audio.play()
+                whistleAudio.play()
                 break;
 
             case 'restTime':
