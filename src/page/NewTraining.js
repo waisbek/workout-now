@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom'
-import '../App.css';
+import '../App.scss';
 import {
     Container,
     Row,
@@ -204,13 +204,16 @@ const NewTraining = () => {
             return (
                 <Jumbotron className='new-training-page'>
                     <Row className='d-flex justify-content-center align-items-center'>
-                        <img src="/assets/img/sad.svg" width="180" height="180" title="Sad" className='mr-2' alt='Sad' />
+                        <img src="/assets/img/sad.svg" title="Sad" className='mr-2 content-img' alt='Sad' />
                     </Row>
                     <Row className='mt-5 d-flex justify-content-center align-items-center'>
                         <span className='empty-list-message'>Você ainda não adicionou nenhum exercício.</span>
                     </Row>
-                    <Row className='d-flex justify-content-center align-items-center'>
-                        <span className='empty-list-message'>Clique no botão <Button color="secondary" onClick={toggleNewRoundModal}>Adicionar Round</Button>  para começar.</span>
+                    <Row className='d-flex justify-content-center align-items-center mt-1'>
+                        <span className='empty-list-message'>Clique no botão para começar.</span>
+                    </Row>
+                    <Row className='d-flex justify-content-center align-items-center mt-1'>
+                        <Button color="secondary" onClick={toggleNewRoundModal}>Adicionar Round</Button>
                     </Row>
                 </Jumbotron>
             )
@@ -296,7 +299,7 @@ const NewTraining = () => {
             <Container className="mt-3">
                 {goTraining && <Redirect to={{ pathname: '/training', state: { training: training } }} />}
                 <Row>
-                    <Col>
+                    <Col className="d-flex justify-content-center align-items-center">
                         <Button color="secondary" size="sm" onClick={toggleNewRoundModal}>Adicionar Round</Button>
                         <Button color="secondary" size="sm" disabled={disabelStartBtn} className='ml-2' onClick={() => { setGoTraining(true) }}>Iniciar treinamento</Button>
                     </Col>

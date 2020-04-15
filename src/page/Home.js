@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import '../App.css';
+import '../App.scss';
 import {
     Container,
     Row,
