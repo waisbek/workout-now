@@ -19,3 +19,4 @@ A web application that allow to create a exercise plan, after that you can start
 - Bootstrap and reactstrap for design/layout of the components.
 - react-router-dom as navigation library.
 - react-circular-progressbar component to improve the UI (countdown timer).
+- howler.js library to control the sounds.
